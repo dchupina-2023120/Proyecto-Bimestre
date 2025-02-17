@@ -1,0 +1,345 @@
+{
+	"info": {
+		"_postman_id": "4d190f8a-338c-4d98-8679-0ec36def687d",
+		"name": "ProyectoBim",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37956994"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Alejandro",
+									"type": "text"
+								},
+								{
+									"key": "surname",
+									"value": "Chupina",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "Achupina",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "achupina@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "1789ASD/m",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:2636/api/auth/register",
+							"host": [
+								"localhost"
+							],
+							"port": "2636",
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:2636/api/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "2636",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "AgregarUsuario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Andre",
+									"type": "text"
+								},
+								{
+									"key": "surname",
+									"value": "Mendez",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "amendez ",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "amendez-2023120@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "password123",
+									"type": "text"
+								},
+								{
+									"key": "role",
+									"value": "CLIENT",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:2636/api/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "2636",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListarUsuario",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "ListarUsuarioPorID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:2636/api/users/",
+							"host": [
+								"localhost"
+							],
+							"port": "2636",
+							"path": [
+								"api",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EditarUsuario",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2N2IyOGM0MWE3ZDc2NTdlNmFhN2ZjNjYiLCJ1c2VybmFtZSI6ImFjaHVwaW5hIiwibmFtZSI6IkFuZHJlIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzM5NzU0NTY4LCJleHAiOjE3Mzk3NjUzNjh9.6rUz2C0SP9u8JNAhFvklPwD_XvD-Y9xoGrTsOZRvlHw",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Andre",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:2636/api/users/67b25d0e22516249c45ba8f3",
+							"host": [
+								"localhost"
+							],
+							"port": "2636",
+							"path": [
+								"api",
+								"users",
+								"67b25d0e22516249c45ba8f3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EliminarUsuario",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2N2IyOGM0MWE3ZDc2NTdlNmFhN2ZjNjYiLCJ1c2VybmFtZSI6ImFjaHVwaW5hIiwibmFtZSI6IkFuZHJlIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzM5NzU0NTY4LCJleHAiOjE3Mzk3NjUzNjh9.6rUz2C0SP9u8JNAhFvklPwD_XvD-Y9xoGrTsOZRvlHw",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:2636/api/users/67b28c5aa7d7657e6aa7fc6c",
+							"host": [
+								"localhost"
+							],
+							"port": "2636",
+							"path": [
+								"api",
+								"users",
+								"67b28c5aa7d7657e6aa7fc6c"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "CrearCategoria",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nombre",
+									"value": "cereales",
+									"type": "text"
+								},
+								{
+									"key": "descripcion",
+									"value": "categoria cereales ",
+									"type": "text"
+								},
+								{
+									"key": "estado",
+									"value": "true",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:2636/api/category",
+							"host": [
+								"localhost"
+							],
+							"port": "2636",
+							"path": [
+								"api",
+								"category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listarCategoria",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "BuscarPorID",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "EditarCategoria",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nombre",
+									"value": "leche",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:2636/api/category/67b286a561067069743541de",
+							"host": [
+								"localhost"
+							],
+							"port": "2636",
+							"path": [
+								"api",
+								"category",
+								"67b286a561067069743541de"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EliminarCategory",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:2636/api/category/67b286a561067069743541de",
+							"host": [
+								"localhost"
+							],
+							"port": "2636",
+							"path": [
+								"api",
+								"category",
+								"67b286a561067069743541de"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
