@@ -1,3 +1,4 @@
+import { encrypt } from "../../utils/encrypt.js";
 import User from "../user/user.model.js"
 import { hash } from "argon2";
 
@@ -133,3 +134,59 @@ export const deleteUser = async (req, res) => {
     }
 }
 
+
+
+const agregarUsuarioPorDefecto = async () => {
+    try {
+        // Verificar si ya existe un usuario administrador
+        const adminExistente = await User.findOne({ role: "ADMIN" });
+
+        if (!adminExistente) {
+            // Encriptar contraseña
+            const passwordHash = await encrypt("Admin1234", 10);
+
+            // Crear usuario por defecto
+            const usuarioAdmin = new User({
+                name: "Diego ",
+                surname: "Chupina",
+                username: "dchupina",
+                email: "dchupina-2023120@kinal.edu.gt",
+                password: passwordHash,
+                role: "ADMIN",
+            });
+
+            await usuarioAdmin.save();
+            console.log("Usuario administrador por defecto agregado");
+        }
+    } catch (error) {
+        console.error("Error al agregar usuario por defecto:", error);
+    }
+};
+
+// Llamar a la función
+agregarUsuarioPorDefecto();
+
+
+
+export const updatePassword = async (req, res) => {
+    try {
+      const { currentPassword, newPassword } = req.body;
+      const user = await User.findById(req.user.id).select("+password");
+      if (!user) return res.status(404).json({ message: "User not found" });
+   
+      const isMatch = await checkPassword(user.password, currentPassword);
+      if (!isMatch) {
+        return res.status(400).json({ message: "Current password is incorrect" });
+      }
+   
+      const hashedNewPassword = await encrypt(newPassword);
+      user.password = hashedNewPassword;
+      await user.save();
+      res.status(200).json({ message: "Password updated successfully" });
+    } catch (error) {
+      console.error("❌ Error updating password:", error);
+      res
+        .status(500)
+        .json({ message: "Error updating password", error: error.message });
+    }
+  };

@@ -26,7 +26,7 @@ api.post("/",
 
 api.put("/:id", 
         [
-                validateJwt, 
+              //  validateJwt, 
         ], 
         update
 ); 

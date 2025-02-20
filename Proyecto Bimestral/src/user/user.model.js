@@ -36,7 +36,8 @@ const userSchema=Schema(
             enum:['ADMIN','CLIENT'],
             uppercase:true,
         }
-    }
+    },
+    { timestamps: true, versionKey: false }
 )
 
 userSchema.methods.toJson = function(){
