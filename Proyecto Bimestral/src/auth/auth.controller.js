@@ -14,7 +14,7 @@ export const register = async(req, res)=>{
         let data = req.body
         let user = new User(data)
         user.password = await encrypt(user.password)
-        user.role = 'ADMIN'
+        user.role = 'CLIENT'
         await user.save()
 
         return res.send({message: `Registrado con exito , se puede registrar con nombre de usuario: ${user.username}`})

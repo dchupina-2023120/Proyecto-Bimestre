@@ -6,20 +6,15 @@ import {
     test 
 } from "./auth.controller.js";
 import { validateJwt } from "../../middlewares/validate.jwt.js";
-//import { UserValidator } from "../../middlewares/validators.js";
 
 const api = Router()
 
-// Rutas públicas (No requieren autenticación)
-                      //Middlewares
-api.post('/register', 
-    [
-        //UserValidator,
-    ], register)
-api.post('/login', login)
 
+api.post('/register',register)
+
+api.post('/login', login)
 
 api.get('/test', validateJwt, test)
 
-// Exportamos rutas
+
 export default api

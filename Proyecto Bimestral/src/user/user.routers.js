@@ -6,7 +6,7 @@ import {
         deleteUser, 
         update
 } from "./user.controller.js";
-import { UserValidator } from "../../middlewares/validators.js";
+import { registerValidator } from "../../middlewares/validators.js";
 import { validateJwt } from "../../middlewares/validate.jwt.js";
 
 const api = Router()
@@ -18,7 +18,7 @@ api.get("/:id", getUserById);
 // Rutas protegidas 
 api.post("/", 
         [
-                UserValidator,
+                registerValidator,
 
         ],createUser
 

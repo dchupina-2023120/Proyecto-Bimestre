@@ -14,6 +14,7 @@ import userRoutes from "../src/user/user.routers.js"
 import authRoutes from '../src/auth/auth.routes.js'
 import categoryRoutes from '../src/categorias/category.routes.js'
 import productRoutes from '../src/product/product.routes.js'
+import carritoRoutes from '../src/carrito/carrito.routes.js'
 //El dotenv
 import dotenv from 'dotenv';
 import { limiter } from '../middlewares/rate.limit.js'
@@ -35,7 +36,8 @@ const routes = (app) => {
     app.use('/api/users', userRoutes); // Rutas de usuarios
     app.use('/api/auth',authRoutes);
     app.use('/api/category', categoryRoutes);
-    app.use('/api/product', productRoutes)
+    app.use('/api/product', productRoutes);
+    app.use('/api/carrito', carritoRoutes);
 };
 
 //Ejecutamos el servidor

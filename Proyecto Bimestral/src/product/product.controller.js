@@ -1,5 +1,5 @@
 import Categoria from "../categorias/category.model.js";
-import Producto from "../product/product.model.js";
+import Product from "../product/product.model.js";
 
 
 // Crear un nuevo producto
@@ -11,69 +11,67 @@ export const createProduct = async (req, res) => {
             precio, 
             stock, 
             categoria 
-        } = req.body
+        } = req.body;
 
-        // Verificar si una  categoría existe
-         const categoryExists = await Categoria.findById(categoria);
-         if (!categoryExists) return res.status(404).json({ 
-            message: "Categoría no encontrada" 
-        })
-
-        // Crear un producto nuevo 
-        const newProduct = new Producto({ 
-            nombre, 
-            descripcion, 
-            precio, 
-            stock, 
-            categoria 
-        })
-        await newProduct.save();
-
-        res.status(201).json({
-            message: "Producto agregado",
-            product: newProduct
-        })
-    } catch (err) {
-        console.error("Error al agregar el producto:", err);
-        res.status(500).json({ 
-            message: "Error al agregar el producto", err
-        })
-    }
-}
-
-//Obtener todos los productos
-export const getProducts = async (req, res) => {
-    try {
-        const products = await Producto.find().populate("categoria", "nombre");
-        if (products.length === 0) {
-            return res.status(404).json({ 
-                success: false, 
-                message: "No hay productos disponibles" 
-            })
+        const existingProduct = await Product.findOne({ nombre });
+        if (existingProduct) {
+            return res.status(400).json({ message: "El producto ya existe" });
         }
-        res.json({ 
-            success: 
-            true, 
-            products 
-        });
-    } catch (err) {
-        console.error("Error al obtener productos:", err);
-        res.status(500).json({ message: "Error al obtener productos", err });
-    }
-}
 
-//Obtener un producto por el ID
-export const getProductById = async (req, res) => {
-    try {
-        const product = await Producto.findById(req.params.id).populate("categoria", "nombre");
-        if (!product) return res.status(404).json({ message: "Producto no encontrado" });
+        const product = new Product({ nombre, descripcion, precio, stock, categoria });
+        await product.save();
 
-        res.json(product);
-    } catch (err) {
-        console.error("Error al obtener el producto:", err);
-        res.status(500).json({ message: "Error al obtener el producto", err });
+        res.status(201).json({ message: "Producto creado con éxito", product });
+    } catch (error) {
+        console.error("Error en createProduct:", error);
+        res.status(500).json({ message: "Error al crear el producto", error: error.message });
     }
 };
+
+
+// Obtener todos los productos
+export const getProducts = async (req, res) => {
+    try {
+      
+      const { nombre, categoria } = req.query;
+      const filter = {};
+  
+      if (nombre) {
+        // Búsqueda parcial, sin distinción entre mayúsculas y minúsculas
+        filter.nombre = { $regex: nombre, $options: "i" };
+      }
+  
+      if (categoria) {
+        // Filtra por el ID de la categoría
+        filter.categoria = categoria;
+      }
+  
+      const products = await Product.find(filter).populate("categoria");
+      res.status(200).json({ products });
+    } catch (error) {
+      console.error("❌ Error en getProducts:", error);
+      res
+        .status(500)
+        .json({ message: "Error al obtener los productos", error: error.message });
+    }
+  };
+
+// Obtener un producto por el ID
+export const getProductById = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const product = await Product.findById(id).populate("category");
+      if (!product) return res.status(404).json({ message: "Producto no encontrado" });
+  
+      res.status(200).json({ product });
+    } catch (error) {
+      console.error("Error en getProductById:", error);
+      res
+        .status(500)
+        .json({ message: "Error al obtener el producto", error: error.message });
+    }
+  };
+
 
 //Actualizar un producto
 export const updateProduct = async (req, res) => {
@@ -104,7 +102,7 @@ export const updateProduct = async (req, res) => {
 // Eliminar un producto
 export const deleteProduct = async (req, res) => {
     try {
-        const deletedProduct = await Producto.findByIdAndDelete(req.params.id);
+        const deletedProduct = await Product.findByIdAndDelete(req.params.id);
         if (!deletedProduct) return res.status(404).json({ message: "Producto no encontrado" });
 
         res.json({ message: "Producto eliminado exitosamente" });
@@ -117,7 +115,7 @@ export const deleteProduct = async (req, res) => {
 // Obtener productos agotados
 export const getOutOfStockProducts = async (req, res) => {
     try {
-        const outOfStockProducts = await Producto.find({ stock: 0 });
+        const outOfStockProducts = await Product.find({ stock: 0 });
         res.json(outOfStockProducts);
     } catch (err) {
         console.error("Error al obtener productos agotados:", err);
@@ -135,3 +133,46 @@ export const getTopSellingProducts = async (req, res) => {
         res.status(500).json({ message: "Error al obtener productos más vendidos", err });
     }
 };
+
+
+const agregarProductosPorDefecto = async () => {
+    const productosExistentes = await Product.countDocuments();
+
+    if (productosExistentes === 0) {
+        // Busca una categoría existente para asociar productos
+        const categoria = await Categoria.findOne(); 
+        if (!categoria) {
+            console.error("Error: No hay categorías disponibles para asignar productos.");
+            return;
+        }
+
+        const productosPorDefecto = [
+            {
+                nombre: "Escritorio Moderno",
+                descripcion: "Escritorio de madera con acabado minimalista, ideal para oficinas y estudios.",
+                precio: 150.99,
+                stock: 10,
+                categoria: categoria._id, // Asigna la categoría encontrada
+                masVendida: 5
+            },
+            {
+                nombre: "Silla Ergonómica",
+                descripcion: "Silla de oficina con soporte lumbar ajustable y diseño ergonómico.",
+                precio: 89.99,
+                stock: 15,
+                categoria: categoria._id,
+                masVendida: 8
+            }
+        ];
+
+        try {
+            await Product.insertMany(productosPorDefecto);
+            console.log("Productos por defecto agregados.");
+        } catch (error) {
+            console.error("Error al agregar productos por defecto: ", error);
+        }
+    }
+};
+
+// Ejecutar la función al importar el archivo
+agregarProductosPorDefecto();

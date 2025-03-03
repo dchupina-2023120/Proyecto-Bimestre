@@ -5,19 +5,30 @@ const ProductoSchema =Schema({
         type: String, 
         required: true 
     },
+    descripcion: {
+        type: String
+    },
     precio: { 
         type: Number, 
-        required: true 
+        required: true,
+        min: 0 
     },
     stock: { 
         type: Number, 
-        default: 0 
+        required: true,
+        min: 0 
     },
     categoria: { 
         type:Schema.Types.ObjectId, 
         ref: 'Categoria',
         required: true 
-    }
-});
+    },
+    masVendida: { 
+        type: Number, 
+        default: 0 
+    },
+},
+    { timestamps: true, versionKey: false }
+);
 
 export default model('Product',ProductoSchema)
