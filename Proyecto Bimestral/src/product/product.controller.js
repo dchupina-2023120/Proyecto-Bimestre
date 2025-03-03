@@ -126,7 +126,7 @@ export const getOutOfStockProducts = async (req, res) => {
 // Obtener productos más vendidos
 export const getTopSellingProducts = async (req, res) => {
     try {
-        const topProducts = await Producto.find().sort({ vendidos: -1 }).limit(5);
+        const topProducts = await Product.find().sort({ vendidos: -1 }).limit(5);
         res.json(topProducts);
     } catch (err) {
         console.error(" Error al obtener productos más vendidos:", err);
@@ -174,5 +174,4 @@ const agregarProductosPorDefecto = async () => {
     }
 };
 
-// Ejecutar la función al importar el archivo
 agregarProductosPorDefecto();

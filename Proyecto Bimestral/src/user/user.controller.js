@@ -136,7 +136,32 @@ export const deleteUser = async (req, res) => {
 
 
 
-const agregarUsuarioPorDefecto = async () => {
+export const updatePassword = async (req, res) => {
+    try {
+      const { currentPassword, newPassword } = req.body;
+      const user = await User.findById(req.user.id).select("+password");
+      if (!user) return res.status(404).json({ message: "User not found" });
+   
+      const isMatch = await checkPassword(user.password, currentPassword);
+      if (!isMatch) {
+        return res.status(400).json({ message: "Current password is incorrect" });
+      }
+   
+      const hashedNewPassword = await encrypt(newPassword);
+      user.password = hashedNewPassword;
+      await user.save();
+      res.status(200).json({ message: "Password updated successfully" });
+    } catch (error) {
+      console.error("❌ Error updating password:", error);
+      res
+        .status(500)
+        .json({ message: "Error updating password", error: error.message });
+    }
+  };
+
+
+
+  const agregarUsuarioPorDefecto = async () => {
     try {
         // Verificar si ya existe un usuario administrador
         const adminExistente = await User.findOne({ role: "ADMIN" });
@@ -165,28 +190,3 @@ const agregarUsuarioPorDefecto = async () => {
 
 // Llamar a la función
 agregarUsuarioPorDefecto();
-
-
-
-export const updatePassword = async (req, res) => {
-    try {
-      const { currentPassword, newPassword } = req.body;
-      const user = await User.findById(req.user.id).select("+password");
-      if (!user) return res.status(404).json({ message: "User not found" });
-   
-      const isMatch = await checkPassword(user.password, currentPassword);
-      if (!isMatch) {
-        return res.status(400).json({ message: "Current password is incorrect" });
-      }
-   
-      const hashedNewPassword = await encrypt(newPassword);
-      user.password = hashedNewPassword;
-      await user.save();
-      res.status(200).json({ message: "Password updated successfully" });
-    } catch (error) {
-      console.error("❌ Error updating password:", error);
-      res
-        .status(500)
-        .json({ message: "Error updating password", error: error.message });
-    }
-  };
