@@ -1,22 +1,37 @@
-import express from "express";
-import {
-    createProduct,
-    getProducts,
-    getProductById,
-    updateProduct,
-    deleteProduct,
-    getOutOfStockProducts,
-    getTopSellingProducts
-} from "../product/product.controller.js";
+import { Router } from "express"
+import { 
+    bestSellers, 
+    deletedProduct, 
+    listarProducto, 
+    getProduct, 
+    getProductsByCategory, 
+    agregarProduct, 
+    searchProductsByName, 
+    stockProduct, 
+    editarProducto 
+} from "./product.controller.js"
+import { isAdmin, validateJwt } from "../../middlewares/validate.jwt.js"
+import { productValidator,} from "../../middlewares/validators.js"
+import { objectIdValid } from "../../utils/db.validators.js"
 
-const router = express.Router();
+const api = Router()
+api.post( '/', validateJwt, isAdmin,productValidator, agregarProduct)
 
-router.post("/", createProduct);
-router.get("/", getProducts);
-router.get("/:id", getProductById);
-router.put("/:id", updateProduct);
-router.delete("/:id", deleteProduct);
-router.get("/agotados", getOutOfStockProducts);
-router.get("/mas-vendidos", getTopSellingProducts);
+api.get('/', validateJwt, listarProducto)
 
-export default router;
+api.get('/get/:id', validateJwt, getProduct)
+
+api.put('/:id',validateJwt, isAdmin, objectIdValid, editarProducto)
+
+api.get('/stockProduct',validateJwt, stockProduct)
+
+api.get('/productos/categoria/:categoryName', validateJwt, getProductsByCategory)
+
+api.get('/bestSellers',validateJwt, bestSellers)
+
+api.delete('/:id',validateJwt, isAdmin,objectIdValid, deletedProduct)
+
+api.get('/productos/buscar/:name', validateJwt, searchProductsByName)
+
+
+export default api

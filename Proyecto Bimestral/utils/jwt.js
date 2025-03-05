@@ -1,20 +1,19 @@
 'use strict'
 
-import jwt from "jsonwebtoken"
+import jwt from 'jsonwebtoken'
 
 //Generar un nuevo token
-                                //carga de datos
 export const generateJwt = async(payload)=>{
-    try {
+    try{
         return jwt.sign(
-            payload, 
+            payload,
             process.env.SECRET_KEY,
             {
-                expiresIn: '3h', 
-                algorithm: "HS256"
+                expiresIn: '3h',
+                algorithm: 'HS256'
             }
         )
-    } catch (err) {
+    }catch(err){
         console.error(err)
         return err
     }

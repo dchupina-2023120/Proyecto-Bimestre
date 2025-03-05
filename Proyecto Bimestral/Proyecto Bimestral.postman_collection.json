@@ -1,0 +1,1085 @@
+{
+	"info": {
+		"_postman_id": "aba618f8-5efb-42a1-9d44-e3821363646c",
+		"name": "Proyecto Bimestral",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37956994"
+	},
+	"item": [
+		{
+			"name": "Usuario",
+			"item": [
+				{
+					"name": "CosasUsuario",
+					"item": [
+						{
+							"name": "Registrar Usuario",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "diego",
+											"type": "text"
+										},
+										{
+											"key": "surname",
+											"value": "andre",
+											"type": "text"
+										},
+										{
+											"key": "username",
+											"value": "diegoandre",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "diegoandre@gmail.com",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "P@ssw0rd!2024",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:2636/api/register",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var data = JSON.parse(responseBody)\r",
+											"postman.setGlobalVariable('token',data.token)"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "userLoggin",
+											"value": "diegoandre",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "P@ssw0rd!2024",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:2636/api/login",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ActualizarContraseña",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "currentPassword",
+											"value": "P@ssw0rd!2024",
+											"type": "text"
+										},
+										{
+											"key": "newPassword",
+											"value": "P@ssw0rd!2025",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:2636/api/updatePassword",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"updatePassword"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Actualizar",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "Sebastian",
+											"type": "text"
+										},
+										{
+											"key": "currentPassword",
+											"value": "P@ssw0rd!2025",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:2636/api/67c69030078ccecada5cf588",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"67c69030078ccecada5cf588"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "localhost:2636/api/67c758071802c27dac753448",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"67c758071802c27dac753448"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Productos",
+					"item": [
+						{
+							"name": "Productos más vendido Usuario",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:2636/api/product/bestSellers",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"product",
+										"bestSellers"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buscar Producto por nombre",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:2636/api/product/productos/buscar/Enchufe Inteligente WiFi",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"product",
+										"productos",
+										"buscar",
+										"Enchufe Inteligente WiFi"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Producto por nombre de categoria",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:2636/api/product/productos/categoria/Default",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"product",
+										"productos",
+										"categoria",
+										"Default"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar productos",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:2636/api/product/get",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"product",
+										"get"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Carrito",
+					"item": [
+						{
+							"name": "AgregarAlCarrito",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "productName",
+											"value": "Enchufe Inteligente WiFi",
+											"type": "text"
+										},
+										{
+											"key": "quantity",
+											"value": "45",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:2636/api/cart/",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"cart",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Factura",
+					"item": [
+						{
+							"name": "Completar compra",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:2636/api/invoice/purchase",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"invoice",
+										"purchase"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Historial Compras",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:2636/api/invoice/history",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"invoice",
+										"history"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "ADMIN",
+			"item": [
+				{
+					"name": "CosasAdministrador",
+					"item": [
+						{
+							"name": "Registrar Administrador",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "Santiago",
+											"type": "text"
+										},
+										{
+											"key": "surname",
+											"value": "mateo",
+											"type": "text"
+										},
+										{
+											"key": "username",
+											"value": "smateo",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "smateo@gmail.com",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "P@ssw0rd!2024",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "53237289",
+											"type": "text"
+										},
+										{
+											"key": "role",
+											"value": "ADMIN",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:2636/api/register",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var data = JSON.parse(responseBody)\r",
+											"postman.setGlobalVariable('token',data.token)"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "userLoggin",
+											"value": "smateo",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "P@ssw0rd!2024",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:2636/api/login",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Actualizar usuario",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "Luis",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:2636/api/user/67c758341802c27dac75345a",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"user",
+										"67c758341802c27dac75345a"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ListarUsuario",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:2636/api/user",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "BuscarUsuarioID",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:2636/api/user/67c758341802c27dac75345a",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"user",
+										"67c758341802c27dac75345a"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Categoria",
+					"item": [
+						{
+							"name": "AgregarCate",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "Smart Home & Domótica",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "Incluye dispositivos electrónicos diseñados para automatizar y mejorar la comodidady la \n seguridad",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:2636/api/category/save",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"category",
+										"save"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ListarCategoria",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "BuscarID",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:2636/api/category/get/67c6f4a99b314ab19c929ef0",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"category",
+										"get",
+										"67c6f4a99b314ab19c929ef0"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ActualizarCate",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "Electronico",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:2636/api/category/67c6f4a99b314ab19c929ef0",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"category",
+										"67c6f4a99b314ab19c929ef0"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar Categoria",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:2636/api/category/67c696949034f3b990e26b14",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"category",
+										"67c696949034f3b990e26b14"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Productos",
+					"item": [
+						{
+							"name": "AgregarProducto",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "Enchufe Inteligente WiFi",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "Controla tus dispositivos eléctricos desde cualquier lugar con este enchufe inteligente",
+											"type": "text"
+										},
+										{
+											"key": "price",
+											"value": "20",
+											"type": "text"
+										},
+										{
+											"key": "stock",
+											"value": "150",
+											"type": "text"
+										},
+										{
+											"key": "sales",
+											"value": "45",
+											"type": "text"
+										},
+										{
+											"key": "category",
+											"value": "67c6f4a99b314ab19c929ef0",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:2636/api/product/save",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"product",
+										"save"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "Cuna",
+											"disabled": true
+										},
+										{
+											"key": "description",
+											"value": "Es algo para un bebe",
+											"disabled": true
+										},
+										{
+											"key": "price",
+											"value": "1000",
+											"disabled": true
+										},
+										{
+											"key": "stock",
+											"value": "2",
+											"disabled": true
+										},
+										{
+											"key": "sales",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "keeper",
+											"value": "67aee72146358414e194968e",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ListarProducto",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "localhost:2636/api/product/get",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"product",
+										"get"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Actualizar Productos",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "price",
+											"value": "10",
+											"type": "text"
+										},
+										{
+											"key": "stock",
+											"value": "0",
+											"type": "text"
+										},
+										{
+											"key": "sales",
+											"value": "10",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "localhost:2636/v1/product/update/67c5b070a140fd0fe084c54a",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"v1",
+										"product",
+										"update",
+										"67c5b070a140fd0fe084c54a"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Productos más vendido",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:2636/api/product/bestSellers",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"product",
+										"bestSellers"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Productos Agotados",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:2636/api/product/stockProduct",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"product",
+										"stockProduct"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar Producto",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:2636/v1/product/67c5dad33b52e20e4c5c4718",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"v1",
+										"product",
+										"67c5dad33b52e20e4c5c4718"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Factura",
+					"item": [
+						{
+							"name": "Editar factura",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"updatedItems\": [\r\n        {\r\n            \"productId\": \"67c6f5fa9b314ab19c929f06\",\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:2636/api/invoice/67c6f473d11fa36e7f222e6f",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "2636",
+									"path": [
+										"api",
+										"invoice",
+										"67c6f473d11fa36e7f222e6f"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}

@@ -1,39 +1,39 @@
-import { Router } from "express";
+import { Router } from "express"
 import { 
-        getUsers, 
-        getUserById, 
-        createUser, 
-        deleteUser, 
-        update
-} from "./user.controller.js";
-import { registerValidator } from "../../middlewares/validators.js";
-import { validateJwt } from "../../middlewares/validate.jwt.js";
+    listarUsuario, 
+    buscarUsuarioId, 
+    editarUsuario,
+} from "./user.controllerAdmin.js"
+import { 
+    isAdmin, 
+    validateJwt 
+} from "../../middlewares/validate.jwt.js"
+import { updateUserValidator } from "../../middlewares/validators.js"
+
 
 const api = Router()
 
+api.get(
+    '/',
+    validateJwt,
+    isAdmin,
+    listarUsuario
+)
 
-api.get("/", getUsers); 
-api.get("/:id", getUserById); 
+api.get(
+    '/:id', 
+    validateJwt,
+    buscarUsuarioId
+)
 
-// Rutas protegidas 
-api.post("/", 
-        [
-                registerValidator,
-
-        ],createUser
-
-); 
-
-api.put("/:id", 
-        [
-              //  validateJwt, 
-        ], 
-        update
-); 
-
-
-
-api.delete("/:id", deleteUser); 
-
+api.put(
+    '/:id', 
+    [
+        validateJwt, 
+        updateUserValidator
+    ], 
+    editarUsuario
+)
 
 export default api
+

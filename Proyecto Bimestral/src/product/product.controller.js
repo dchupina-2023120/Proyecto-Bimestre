@@ -1,177 +1,274 @@
-import Categoria from "../categorias/category.model.js";
-import Product from "../product/product.model.js";
+import Product from './product.model.js'
+import Category from '../category/category.model.js'
 
-
-// Crear un nuevo producto
-export const createProduct = async (req, res) => {
+export const agregarProduct = async (req, res) => {
     try {
-        const { 
-            nombre, 
-            descripcion, 
-            precio, 
-            stock, 
-            categoria 
-        } = req.body;
+        const data = req.body
 
-        const existingProduct = await Product.findOne({ nombre });
-        if (existingProduct) {
-            return res.status(400).json({ message: "El producto ya existe" });
+        const newProduct = new Product(data)
+        
+        await newProduct.save()
+
+        return res.send({
+            success: true,
+            message: 'Producto guardado exitosamente',
+            product: newProduct
+        })
+
+    } catch (err) {
+        console.error(err)
+        return res.status(500).send({
+            success: false,
+            message: 'Error general',
+            error: err.message
+        })
+    }
+}
+
+export const listarProducto = async (req, res) => {
+    const { limit, skip } = req.query
+    try {
+        const products = await Product.find()
+            .populate({
+                path: 'category',
+                select: 'name -_id'
+            })
+            .skip(skip)
+            .limit(limit)
+        
+        if (products.length === 0) {
+            return res.status(404).send({
+                success: false,
+                message: 'No se encontraron productos'
+            })
+        }
+        return res.send({
+            success: true,
+            message: 'Productos encontrados:',
+            total: products.length,
+            products
+        })
+
+    } catch (err) {
+        console.error(err)
+        return res.status(500).send({
+            success: false,
+            message: 'Error general al obtener productos',
+            error: err
+        })
+    }
+}
+
+export const getProduct = async (req, res) => {
+    try {
+        let { id } = req.params
+
+        let product = await Product.findById(id)
+            .populate({
+                path: 'category',
+                select: 'name -_id'
+            })
+
+        if (!product) {
+            return res.status(404).send({
+                success: false,
+                message: 'Producto no encontrado'
+            })
         }
 
-        const product = new Product({ nombre, descripcion, precio, stock, categoria });
-        await product.save();
+        return res.send({
+            success: true,
+            message: 'Producto encontrado',
+            product
+        })
 
-        res.status(201).json({ message: "Producto creado con éxito", product });
+    } catch (err) {
+        console.error(err)
+        return res.status(500).send({
+            success: false,
+            message: 'Error general',
+            error: err
+        })
+    }
+}
+
+export const editarProducto = async (req, res) => {
+    try {
+        const { id } = req.params
+        const data = req.body
+
+        const update = await Product.findByIdAndUpdate(id, data, { new: true })
+
+        if (!update) return res.status(404).send({
+            success: false,
+            message: 'Producto no encontrado'
+        })
+        
+        return res.send({
+            success: true,
+            message: 'Producto actualizado',
+            product: update
+        })
+
+    } catch (err) {
+        console.error('Error general', err)
+        return res.status(500).send({
+            success: false,
+            message: 'Error general',
+            error: err
+        })
+    }
+}
+
+export const stockProduct = async (req, res) => {
+    try {
+        const stockProduct = await Product.find({ stock: 0 })
+
+        if (stockProduct.length === 0) {
+            return res.status(404).send({
+                success: false,
+                message: 'No hay productos agotados'
+            })
+        }
+        return res.send({
+            success: true,
+            message: 'Los productos agotados son:',
+            product: stockProduct
+        })
+        
+    } catch (err) {
+        console.error('Error general', err)
+        return res.status(500).send({
+            success: false,
+            message: 'Error general',
+            error: err
+        })
+    }
+}
+
+export const bestSellers = async (req, res) => {
+    try {
+        const bestSellers = await Product.find()
+            .sort({ sales: -1 }) // Orden descendente en las ventas
+            .limit(10) // Fijar límite en productos mostrados
+            .select("name sales stock") // Campos que queremos que se muestren
+
+        if (!bestSellers.length) {
+            return res.status(404).send({
+                success: false,
+                message: "No hay productos vendidos"
+            })
+        }
+        return res.send({
+            success: true,
+            message: 'Los productos más vendidos son:',
+            product: bestSellers
+        })
+
+    } catch (err) {
+        console.error('Error general', err)
+        return res.status(500).send({
+            success: false,
+            message: 'Error general',
+            error: err
+        })
+    }
+}
+
+export const deletedProduct = async (req, res) => {
+    try {
+        let id = req.params.id
+        let deletedProduct = await Product.findByIdAndDelete(id)
+
+        if (!deletedProduct) {
+            return res.status(404).send({ message: 'Producto no encontrado, no eliminado' })
+        }
+
+        return res.send({ message: 'Producto eliminado exitosamente', deletedProduct })
     } catch (error) {
-        console.error("Error en createProduct:", error);
-        res.status(500).json({ message: "Error al crear el producto", error: error.message });
+        console.error('Error general', error)
+        return res.status(500).send({ message: 'Error general', error })
     }
-};
+}
 
-
-// Obtener todos los productos
-export const getProducts = async (req, res) => {
+export const searchProductsByName = async (req, res) => {
     try {
-      
-      const { nombre, categoria } = req.query;
-      const filter = {};
-  
-      if (nombre) {
-        // Búsqueda parcial, sin distinción entre mayúsculas y minúsculas
-        filter.nombre = { $regex: nombre, $options: "i" };
-      }
-  
-      if (categoria) {
-        // Filtra por el ID de la categoría
-        filter.categoria = categoria;
-      }
-  
-      const products = await Product.find(filter).populate("categoria");
-      res.status(200).json({ products });
+        const { name } = req.params // Obtener el nombre del producto desde los parámetros de la ruta
+
+        if (!name) {
+            return res.status(400).send({
+                success: false,
+                message: 'El nombre del producto es requerido'
+            })
+        }
+
+        // Buscar productos que coincidan con el nombre (usando una expresión regular)
+        const products = await Product.find({
+            name: { $regex: name, $options: 'i' } // 'i' para hacer la búsqueda sin importar mayúsculas y minúsculas
+        }).populate({
+            path: 'category',
+            select: 'name -_id'
+        })
+
+        if (products.length === 0) {
+            return res.status(404).send({
+                success: false,
+                message: 'No se encontraron productos con ese nombre'
+            })
+        }
+
+        return res.send({
+            success: true,
+            message: 'Productos encontrados:',
+            products
+        })
     } catch (error) {
-      console.error("❌ Error en getProducts:", error);
-      res
-        .status(500)
-        .json({ message: "Error al obtener los productos", error: error.message });
+        console.error('Error general', error)
+        return res.status(500).send({
+            success: false,
+            message: 'Error general',
+            error
+        })
     }
-  };
+}
 
-// Obtener un producto por el ID
-export const getProductById = async (req, res) => {
+export const getProductsByCategory = async (req, res) => {
     try {
-      const { id } = req.params;
-      const product = await Product.findById(id).populate("category");
-      if (!product) return res.status(404).json({ message: "Producto no encontrado" });
-  
-      res.status(200).json({ product });
+        const { categoryName } = req.params 
+
+        const category = await Category.findOne({ name: categoryName })
+
+        if (!category) {
+            return res.status(404).send({
+                success: false,
+                message: 'Categoría no encontrada'
+            })
+        }
+
+        // Buscar productos que pertenecen a la categoría encontrada
+        const products = await Product.find({ category: category._id }).populate({
+            path: 'category',
+            select: 'name -_id'
+        })
+
+        if (products.length === 0) {
+            return res.status(404).send({
+                success: false,
+                message: 'No se encontraron productos en esta categoría'
+            })
+        }
+
+        return res.send({
+            success: true,
+            message: 'Productos encontrados en la categoría:',
+            products
+        })
     } catch (error) {
-      console.error("Error en getProductById:", error);
-      res
-        .status(500)
-        .json({ message: "Error al obtener el producto", error: error.message });
+        console.error('Error general', error)
+        return res.status(500).send({
+            success: false,
+            message: 'Error general',
+            error
+        })
     }
-  };
-
-
-//Actualizar un producto
-export const updateProduct = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const data = req.body;
-
-        // Si se quiere cambiar de categoría, validar que exista
-        if (data.categoria) {
-            const categoryExists = await Categoria.findById(data.categoria);
-            if (!categoryExists) return res.status(404).json({ message: "❌ Categoría no encontrada" });
-        }
-
-        const updatedProduct = await Producto.findByIdAndUpdate(id, data, { new: true });
-
-        if (!updatedProduct) return res.status(404).json({ message: "Producto no encontrado" });
-
-        res.json({
-            message: "Producto actualizado",
-            product: updatedProduct
-        });
-    } catch (err) {
-        console.error("Error al actualizar el producto:", err);
-        res.status(500).json({ message: "Error al actualizar el producto", err });
-    }
-};
-
-// Eliminar un producto
-export const deleteProduct = async (req, res) => {
-    try {
-        const deletedProduct = await Product.findByIdAndDelete(req.params.id);
-        if (!deletedProduct) return res.status(404).json({ message: "Producto no encontrado" });
-
-        res.json({ message: "Producto eliminado exitosamente" });
-    } catch (err) {
-        console.error("Error al eliminar el producto:", err);
-        res.status(500).json({ message: "Error al eliminar el producto", err });
-    }
-};
-
-// Obtener productos agotados
-export const getOutOfStockProducts = async (req, res) => {
-    try {
-        const outOfStockProducts = await Product.find({ stock: 0 });
-        res.json(outOfStockProducts);
-    } catch (err) {
-        console.error("Error al obtener productos agotados:", err);
-        res.status(500).json({ message: "Error al obtener productos agotados", err });
-    }
-};
-
-// Obtener productos más vendidos
-export const getTopSellingProducts = async (req, res) => {
-    try {
-        const topProducts = await Product.find().sort({ vendidos: -1 }).limit(5);
-        res.json(topProducts);
-    } catch (err) {
-        console.error(" Error al obtener productos más vendidos:", err);
-        res.status(500).json({ message: "Error al obtener productos más vendidos", err });
-    }
-};
-
-
-const agregarProductosPorDefecto = async () => {
-    const productosExistentes = await Product.countDocuments();
-
-    if (productosExistentes === 0) {
-        // Busca una categoría existente para asociar productos
-        const categoria = await Categoria.findOne(); 
-        if (!categoria) {
-            console.error("Error: No hay categorías disponibles para asignar productos.");
-            return;
-        }
-
-        const productosPorDefecto = [
-            {
-                nombre: "Escritorio Moderno",
-                descripcion: "Escritorio de madera con acabado minimalista, ideal para oficinas y estudios.",
-                precio: 150.99,
-                stock: 10,
-                categoria: categoria._id, // Asigna la categoría encontrada
-                masVendida: 5
-            },
-            {
-                nombre: "Silla Ergonómica",
-                descripcion: "Silla de oficina con soporte lumbar ajustable y diseño ergonómico.",
-                precio: 89.99,
-                stock: 15,
-                categoria: categoria._id,
-                masVendida: 8
-            }
-        ];
-
-        try {
-            await Product.insertMany(productosPorDefecto);
-            console.log("Productos por defecto agregados.");
-        } catch (error) {
-            console.error("Error al agregar productos por defecto: ", error);
-        }
-    }
-};
-
-agregarProductosPorDefecto();
+}

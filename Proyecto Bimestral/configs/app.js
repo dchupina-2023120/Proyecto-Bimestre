@@ -1,60 +1,43 @@
-//Levantar servidor express (HTTP)
+import express from "express"
+import cors from 'cors'
+import helmet from "helmet"
+import morgan from "morgan"
 
-//Modular | + efectiva + legible | trabaja en funciones
-
-'use strict'
-
-//ECModules | ESModules
-import express from 'express' //Servidor HTTP
-import morgan from 'morgan' //Logs
-import helmet from 'helmet' //Seguridad para HTTP
-import cors from 'cors' //Acceso al API
-//Importamos las rutas de las entidades a trabajar.
-import userRoutes from "../src/user/user.routers.js"
-import authRoutes from '../src/auth/auth.routes.js'
-import categoryRoutes from '../src/categorias/category.routes.js'
+import userRouter from '../src/user/user.routers.js'
 import productRoutes from '../src/product/product.routes.js'
-import carritoRoutes from '../src/carrito/carrito.routes.js'
-//El dotenv
-import dotenv from 'dotenv';
-import { limiter } from '../middlewares/rate.limit.js'
-dotenv.config(); // <-- Asegura que .env se cargue correctamente
+import categoryRoutes from '../src/category/category.routes.js'
+import authRoutes from '../src/auth/auth.routes.js'
+import cartRoutes from '../src/cart/cart.routes.js'
+import facturaRoutes from '../src/factura/factura.routes.js'
 
-//Configuraciones de express metidas en una función
 const configs = (app)=>{
-    app.use(express.json()) //Aceptar y enviar datos en JSON
-    app.use(express.urlencoded({extended: false})) //No encriptar la URL
-    app.use(cors()) //Antes que los demás que vienen bajo este. (Políticas de seguridad)
-    app.use(helmet()) //Seguridad de express (HTTP)
-    app.use(morgan('dev')) //Gestionador de Logs (dev: )
-    app.use(limiter)
+    app.use(express.json())
+    app.use(express.urlencoded({extended:false}))
+    app.use(cors())
+    app.use(helmet())
+    app.use(morgan('dev'))
 }
 
-//Cuando tengamos rutas.
-//  Carga de rutas
-const routes = (app) => {
-    app.use('/api/users', userRoutes); // Rutas de usuarios
-    app.use('/api/auth',authRoutes);
-    app.use('/api/category', categoryRoutes);
-    app.use('/api/product', productRoutes);
-    app.use('/api/carrito', carritoRoutes);
-};
+const routes = (app)=>{
+    app.use('/api',authRoutes)
+    app.use('/api/user', userRouter)
+    app.use('/api/category', categoryRoutes)
+    app.use('/api/product', productRoutes)
+    app.use('/api/cart', cartRoutes)
+    app.use('/api/factura', facturaRoutes)
+}
 
-//Ejecutamos el servidor
-export const initServer =  ()=>{
-    //Crear instancia de express
-    const app = express()//Instancia de express
+
+
+export const initServer = ()=>{
+    const app = express()
     try {
-                //servidor : app.
         configs(app)
         routes(app)
-                //puerto en el que corre: 2636.
         app.listen(process.env.PORT)
-                //Impresión sobre el puerto en el que corre.
-        console.log(`Server running on port ${process.env.PORT}`)
-    } catch (err) {
-            //Impresión del fallo de inicialización del servidor, impresión del error.
-        console.error('Server init failed', err)
-        process.exit(1); // Cierra el proceso si hay error
+        console.log(`Server running in port ${process.env.PORT}`);
+    } catch (error) {
+        console.error(`Server init failed`,error);
+        
     }
 }
